@@ -1,0 +1,87 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+}
+
+model Admin {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String   // Hashed via bcrypt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Agent {
+  id          String   @id @default(cuid())
+  name        String
+  photoUrl    String?
+  company     String
+  designation String
+  bio         String?  @db.Text
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  reviews      Review[]
+  reviewTokens ReviewToken[]
+}
+
+model Question {
+  id        String   @id @default(cuid())
+  text      String
+  category  String?  
+  isActive  Boolean  @default(true)
+  order     Int      @default(0)
+
+  answers   Answer[]
+}
+
+model Review {
+  id            String       @id @default(cuid())
+  agentId       String
+  reviewerEmail String?      
+  overallRating Int          
+  comment       String?      @db.Text
+  status        ReviewStatus @default(APPROVED)
+  createdAt     DateTime     @default(now())
+  
+  agent         Agent        @relation(fields: [agentId], references: [id], onDelete: Cascade)
+  answers       Answer[]
+  
+  @@unique([agentId, reviewerEmail])
+  @@index([agentId])
+}
+
+model Answer {
+  id         String   @id @default(cuid())
+  reviewId   String
+  questionId String
+  rating     Int      
+
+  review     Review   @relation(fields: [reviewId], references: [id], onDelete: Cascade)
+  question   Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  
+  @@unique([reviewId, questionId])
+}
+
+model ReviewToken {
+  id        String   @id @default(cuid())
+  token     String   @unique
+  agentId   String
+  isUsed    Boolean  @default(false)
+  expiresAt DateTime 
+  createdAt DateTime @default(now())
+
+  agent     Agent    @relation(fields: [agentId], references: [id], onDelete: Cascade)
+  
+  @@index([token])
+}
+
+enum ReviewStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
