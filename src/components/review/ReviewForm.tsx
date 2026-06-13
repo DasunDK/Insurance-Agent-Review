@@ -92,7 +92,7 @@ export function ReviewForm({ token, agent, questions }: { token: string, agent: 
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="w-full px-4 py-3 rounded-lg border border-slate-200 focus:ring-2 focus:ring-emerald-500 focus:outline-none"
+            className="w-full px-4 py-3 rounded-lg border border-slate-200 bg-white text-slate-900 placeholder:text-slate-400 focus:ring-2 focus:ring-emerald-500 focus:outline-none"
             placeholder="To verify your review"
           />
         </div>
@@ -103,7 +103,7 @@ export function ReviewForm({ token, agent, questions }: { token: string, agent: 
             rows={4} 
             value={comment}
             onChange={(e) => setComment(e.target.value)}
-            className="w-full px-4 py-3 rounded-lg border border-slate-200 focus:ring-2 focus:ring-emerald-500 focus:outline-none"
+            className="w-full px-4 py-3 rounded-lg border border-slate-200 bg-white text-slate-900 placeholder:text-slate-400 focus:ring-2 focus:ring-emerald-500 focus:outline-none"
             placeholder="What did they do well? What could be improved?"
           ></textarea>
         </div>

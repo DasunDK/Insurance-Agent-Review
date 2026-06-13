@@ -4,9 +4,10 @@ import { ReviewForm } from '@/components/review/ReviewForm';
 
 export const dynamic = 'force-dynamic';
 
-export default async function ReviewPage({ params }: { params: { token: string } }) {
+export default async function ReviewPage({ params }: { params: Promise<{ token: string }> }) {
+  const { token } = await params;
   const reviewToken = await prisma.reviewToken.findUnique({
-    where: { token: params.token },
+    where: { token },
     include: { agent: true }
   });
 
@@ -41,7 +42,7 @@ export default async function ReviewPage({ params }: { params: { token: string }
 
   return (
     <div className="min-h-screen bg-slate-50 py-12 px-4 sm:px-6 lg:px-8 flex items-center justify-center">
-      <ReviewForm token={params.token} agent={reviewToken.agent} questions={questions} />
+      <ReviewForm token={token} agent={reviewToken.agent} questions={questions} />
     </div>
   );
 }

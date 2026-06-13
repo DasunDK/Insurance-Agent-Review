@@ -1,9 +1,10 @@
 import prisma from '@/lib/prisma';
 import { notFound } from 'next/navigation';
 
-export default async function AgentPage({ params }: { params: { agentId: string } }) {
+export default async function AgentPage({ params }: { params: Promise<{ agentId: string }> }) {
+  const { agentId } = await params;
   const agent = await prisma.agent.findUnique({
-    where: { id: params.agentId },
+    where: { id: agentId },
     include: {
       reviews: {
         include: { answers: { include: { question: true } } },
